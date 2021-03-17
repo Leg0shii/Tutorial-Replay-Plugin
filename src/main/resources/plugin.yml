@@ -1,0 +1,7 @@
+name: Parkour
+version: ${project.version}
+main: de.legoshi.parkour.Main
+api-version: 1.16
+
+commands:
+  replay:
