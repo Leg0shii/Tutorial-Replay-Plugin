@@ -54,7 +54,6 @@ public class FW {
             float pitch = (float) c.getDouble(pos + ".pitch");
 
             Location location = new Location(world, x, y, z, yaw, pitch);
-            System.out.println(location.toString());
 
             return location;
 

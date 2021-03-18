@@ -11,12 +11,6 @@ import org.bukkit.entity.Player;
 
 public class ReplayCommand implements CommandExecutor {
 
-      /*
-      /replay start <name>
-      /replay stop <name>
-      /replay play
-       */
-
       @Override
       public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
@@ -25,7 +19,8 @@ public class ReplayCommand implements CommandExecutor {
 
             if(args.length==2) {
                   String arg = args[0];
-                  String name = args[1];
+                  String name = "Tutorial";
+                  String replname = args[1];
                   Player player = returnPlayer(name);
 
                   if(player==null) {
@@ -33,17 +28,20 @@ public class ReplayCommand implements CommandExecutor {
                         return false;
                   }
 
-                  Replay replay = new Replay(player);
+                  Replay replay = new Replay(player, replname);
                   PlayerObject playerObject = Main.getInstance().playerManager.playerObjectHashMap.get(player);
 
                   if(arg.equals("start")) {
+                        //start recording
                         playerObject.setReplayRecordMode(true);
                         replay.startReplayRecording(playerObject);
-                        //start recording
+                        player.sendMessage("Replay of "+name+" started successfully");
                   } else if(arg.equals("stop")) {
-                        playerObject.setReplayRecordMode(false);
                         //stop recording
+                        playerObject.setReplayRecordMode(false);
+                        player.sendMessage("Replay of "+name+" stopped successfully");
                   } else if(arg.equals("play")) {
+                        player.sendMessage("Started playing replay of "+name+".");
                         replay.playReplay(player, name);
                   }
                   return false;
