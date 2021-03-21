@@ -1,6 +1,7 @@
-package de.legoshi.parkour.util;
+package de.legoshi.parkour.util.replay;
 
 import de.legoshi.parkour.Main;
+import de.legoshi.parkour.util.FW;
 import de.legoshi.parkour.util.fakeplayer.NPC;
 import de.legoshi.parkour.util.player.PlayerObject;
 import org.bukkit.Bukkit;
@@ -15,6 +16,9 @@ public class Replay extends BukkitRunnable {
       private final String fwPath = "./ParkourReplays/";
       private String fwFile;
 
+      public Replay(String replName) {
+            this.fwFile = replName + ".yml";
+      }
 
       public Replay(Player player, String replName) {
             this.counter = 0;
@@ -65,32 +69,26 @@ public class Replay extends BukkitRunnable {
 
       }
 
-      public void playReplay(Player player, String name) {
+      public void playReplay(String name) {
 
             final int[] index = {0};
             FW fwnew = new FW(fwPath, fwFile);
-            NPC npc = new NPC(player, name, fwnew.getLocation(player, 0));
-            npc.spawn(player);
+            NPC npc = new NPC(name, fwnew.getLocation(0));
+            npc.spawn();
             //player.sendMessage("Replay started!");
 
             new BukkitRunnable() {
 
                   @Override
                   public void run() {
-
-                        if(index[0]%20 == 0) Bukkit.getConsoleSender().sendMessage("Repl " + player.getName() + ":" + index[0]);
-
+                        //if(index[0]%20 == 0) Bukkit.getConsoleSender().sendMessage("Repl " + player.getName() + ":" + index[0]);
                         if((fwnew.getInt("length") >= index[0])) { // playerObject.getPlayerStatus().isReplayStart() && playerObject.getPlayerStatus().isReplaymode() &&
-
-                              npc.teleport(fwnew.getLocation(player, index[0]), player);
+                              npc.teleport(fwnew.getLocation(index[0]));
                               index[0]++;
-
                         } else if (!(fwnew.getInt("length") >= index[0])){ // !(playerObject.getPlayerStatus().isReplaymode()) ||
-
                               //player.sendMessage("Replay finished.");
-                              npc.destroy(player);
+                              npc.destroy();
                               cancel();
-
                         }
 
                   }

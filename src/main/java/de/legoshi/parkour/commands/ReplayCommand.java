@@ -1,7 +1,7 @@
 package de.legoshi.parkour.commands;
 
 import de.legoshi.parkour.Main;
-import de.legoshi.parkour.util.Replay;
+import de.legoshi.parkour.util.replay.Replay;
 import de.legoshi.parkour.util.player.PlayerObject;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -17,34 +17,42 @@ public class ReplayCommand implements CommandExecutor {
             if(!(sender instanceof Player)) sender.sendMessage("You are not a Player.");
             if(!sender.isOp()) sender.sendMessage("You dont have permission for this.");
 
-            if(args.length==2) {
-                  String arg = args[0];
-                  String name = "Tutorial";
-                  String replname = args[1];
-                  Player player = returnPlayer(name);
+            if(args.length >= 2) {
+                  String playerName = args[1];
+                  Player player = returnPlayer(playerName);
 
-                  if(player==null) {
-                        sender.sendMessage("Player not online!");
+                  if (args.length == 3) {
+                        String arg = args[0];
+                        String name = "Tutorial";
+                        String replname = args[2];
+
+                        if (player == null) {
+                              sender.sendMessage("Player not online!");
+                              return false;
+                        }
+
+                        Replay replay = new Replay(player, replname);
+                        PlayerObject playerObject = Main.getInstance().playerManager.playerObjectHashMap.get(player);
+
+                        switch (arg) {
+                              case "start":
+                                    //start recording
+                                    playerObject.setReplayRecordMode(true);
+                                    replay.startReplayRecording(playerObject);
+                                    player.sendMessage("Replay of " + name + " started successfully");
+                                    break;
+                              case "stop":
+                                    //stop recording
+                                    playerObject.setReplayRecordMode(false);
+                                    player.sendMessage("Replay of " + name + " stopped successfully");
+                                    break;
+                              case "play":
+                                    player.sendMessage("Started playing replay of " + name + ".");
+                                    replay.playReplay(name);
+                                    break;
+                        }
                         return false;
-                  }
-
-                  Replay replay = new Replay(player, replname);
-                  PlayerObject playerObject = Main.getInstance().playerManager.playerObjectHashMap.get(player);
-
-                  if(arg.equals("start")) {
-                        //start recording
-                        playerObject.setReplayRecordMode(true);
-                        replay.startReplayRecording(playerObject);
-                        player.sendMessage("Replay of "+name+" started successfully");
-                  } else if(arg.equals("stop")) {
-                        //stop recording
-                        playerObject.setReplayRecordMode(false);
-                        player.sendMessage("Replay of "+name+" stopped successfully");
-                  } else if(arg.equals("play")) {
-                        player.sendMessage("Started playing replay of "+name+".");
-                        replay.playReplay(player, name);
-                  }
-                  return false;
+                  } else player.sendMessage("Wrong syntax for replay!");
             }
             return false;
 

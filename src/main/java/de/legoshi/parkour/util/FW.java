@@ -44,9 +44,9 @@ public class FW {
 
       }
 
-      public Location getLocation(Player player, int pos) {
+      public Location getLocation(int pos) {
 
-            World world = player.getWorld();
+            World world = Bukkit.getWorld(c.getString(pos + ".world"));
             double x = c.getDouble(pos + ".x");
             double y = c.getDouble(pos + ".y");
             double z = c.getDouble(pos + ".z");

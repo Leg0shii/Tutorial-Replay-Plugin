@@ -1,9 +1,12 @@
 package de.legoshi.parkour;
 
 import de.legoshi.parkour.commands.ReplayCommand;
+import de.legoshi.parkour.commands.TutorialCommand;
 import de.legoshi.parkour.events.JoinListener;
 import de.legoshi.parkour.manager.PlayerManager;
+import de.legoshi.parkour.util.player.PlayerObject;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -23,6 +26,16 @@ public final class Main extends JavaPlugin {
             CommandRegistration();
             ListenerRegistration();
 
+            onReload();
+
+      }
+
+      public void onReload() {
+
+            for(Player all : Bukkit.getOnlinePlayers()){
+                  playerManager.getPlayerObjectHashMap().put(all, new PlayerObject(all));
+            }
+
       }
 
       @Override
@@ -37,6 +50,7 @@ public final class Main extends JavaPlugin {
       private void CommandRegistration() {
 
             getCommand("replay").setExecutor(new ReplayCommand());
+            getCommand("tutorial").setExecutor(new TutorialCommand());
 
       }
 
@@ -49,8 +63,10 @@ public final class Main extends JavaPlugin {
 
       private void createFolders() {
 
-            File file = new File("./ParkourReplays/");
-            file.mkdir();
+            File parkourFile = new File("./ParkourReplays/");
+            parkourFile.mkdir();
+            File tutorialFile = new File("./TutorialFiles/");
+            tutorialFile.mkdir();
 
       }
 

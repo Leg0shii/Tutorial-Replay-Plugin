@@ -21,11 +21,11 @@ public class NPC extends Reflections {
       private Location location;
       private EntityPlayer npc;
 
-      public NPC(Player player, String name, Location location) {
+      public NPC(String name, Location location) {
 
             MinecraftServer server = ((CraftServer) Bukkit.getServer()).getServer();
-            WorldServer world = ((CraftWorld) Bukkit.getWorld(player.getWorld().getName())).getHandle();
-            this.gameProfile = new GameProfile(UUID.randomUUID(), ChatColor.WHITE + "" + ChatColor.BOLD + name);
+            WorldServer world = ((CraftWorld) location.getWorld()).getHandle();
+            this.gameProfile = new GameProfile(UUID.randomUUID(), ChatColor.WHITE + "" + ChatColor.BOLD + "TutorialMan");
             this.npc = new EntityPlayer(server, world, gameProfile, new PlayerInteractManager(world));
             npc.setLocation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
             this.entityID = npc.getId();
@@ -43,16 +43,18 @@ public class NPC extends Reflections {
 
       }
 
-      public void spawn(Player player) {
+      public void spawn() {
 
-            PlayerConnection connection = ((CraftPlayer)player).getHandle().playerConnection;
-            connection.sendPacket(new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER, npc));
-            connection.sendPacket(new PacketPlayOutNamedEntitySpawn(npc));
-            connection.sendPacket(new PacketPlayOutEntityHeadRotation(npc, (byte) (npc.yaw * 256 / 360)));
+            for(Player all : Bukkit.getOnlinePlayers()) {
+                  PlayerConnection connection = ((CraftPlayer) all).getHandle().playerConnection;
+                  connection.sendPacket(new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER, npc));
+                  connection.sendPacket(new PacketPlayOutNamedEntitySpawn(npc));
+                  connection.sendPacket(new PacketPlayOutEntityHeadRotation(npc, (byte) (npc.yaw * 256 / 360)));
+            }
 
       }
 
-      public void teleport(Location location, Player player) {
+      public void teleport(Location location) {
 
             PacketPlayOutEntity.PacketPlayOutRelEntityMoveLook packetMoveLook = new PacketPlayOutEntity.PacketPlayOutRelEntityMoveLook(
                 entityID,
@@ -65,19 +67,23 @@ public class NPC extends Reflections {
 
             PacketPlayOutEntityHeadRotation packetHead = new PacketPlayOutEntityHeadRotation(this.npc, getFixRotation(this.location.getYaw()));
 
-            PlayerConnection playerConnection = ((CraftPlayer)player).getHandle().playerConnection;
+            for(Player all : Bukkit.getOnlinePlayers()) {
+                  PlayerConnection playerConnection = ((CraftPlayer) all).getHandle().playerConnection;
+                  playerConnection.sendPacket(packetMoveLook);
+                  playerConnection.sendPacket(packetHead);
+            }
 
-            playerConnection.sendPacket(packetMoveLook);
-            playerConnection.sendPacket(packetHead);
             this.location = location.clone();
 
       }
 
-      public void destroy(Player player) {
+      public void destroy() {
 
-            PlayerConnection connection = ((CraftPlayer)player).getHandle().playerConnection;
-            connection.sendPacket(new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER, npc));
-            connection.sendPacket(new PacketPlayOutEntityDestroy(entityID));
+            for(Player all : Bukkit.getOnlinePlayers()) {
+                  PlayerConnection connection = ((CraftPlayer) all).getHandle().playerConnection;
+                  connection.sendPacket(new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER, npc));
+                  connection.sendPacket(new PacketPlayOutEntityDestroy(entityID));
+            }
 
       }
 
