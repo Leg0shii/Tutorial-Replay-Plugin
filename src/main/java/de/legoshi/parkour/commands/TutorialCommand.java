@@ -115,7 +115,7 @@ public class TutorialCommand implements CommandExecutor {
                         all.setGameMode(GameMode.SPECTATOR);
                         all.teleport(start);
                   }
-                  r.playReplay(replay);
+                  r.playReplay();
                   int totalTime = 0;
                   for(TextElement textElement : textElements) {
                         System.out.println(textElements.size());
@@ -170,7 +170,7 @@ public class TutorialCommand implements CommandExecutor {
       public void addStart(Player player, String[] args) {
             FW fw = new FW(path, args[2] + ".yml");
             if(fw.exist()) {
-                  fw.setLocation(player.getLocation(), 0);
+                  fw.setLocation(player.getLocation(), startPosVal);
                   fw.save();
                   player.sendMessage(Message.SUCC_TUTORIAL_ADDSTART.getMessage());
             } else player.sendMessage(Message.ERR_TUTORIAL_NOTEXIST.getMessage());
@@ -179,7 +179,7 @@ public class TutorialCommand implements CommandExecutor {
       public void addEnd(Player player, String[] args) {
             FW fw = new FW(path, args[2] + ".yml");
             if(fw.exist()) {
-                  fw.setLocation(player.getLocation(), 1);
+                  fw.setLocation(player.getLocation(), endPosVal);
                   fw.save();
                   player.sendMessage(Message.SUCC_TUTORIAL_ADDEND.getMessage());
             } else player.sendMessage(Message.ERR_TUTORIAL_NOTEXIST.getMessage());
@@ -263,6 +263,7 @@ public class TutorialCommand implements CommandExecutor {
       }
 
       public void sendHelp(Player player) {
+            player.sendMessage(Message.MSG_TUTORIAL_START.getMessage());
             player.sendMessage(Message.MSG_TUTORIAL_CREATE.getMessage());
             player.sendMessage(Message.MSG_TUTORIAL_DELETE.getMessage());
             player.sendMessage(Message.MSG_TUTORIAL_ADDREPLAY.getMessage());

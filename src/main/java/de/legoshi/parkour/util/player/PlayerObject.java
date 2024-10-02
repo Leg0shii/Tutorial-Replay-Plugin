@@ -1,6 +1,7 @@
 package de.legoshi.parkour.util.player;
 
 import de.legoshi.parkour.util.FW;
+import de.legoshi.parkour.util.fakeplayer.NPC;
 import org.bukkit.entity.Player;
 
 public class PlayerObject {
@@ -11,6 +12,7 @@ public class PlayerObject {
       public int index;
       public boolean replayRecordMode;
       public boolean replayViewMode;
+      public NPC npc;
 
       public PlayerObject(Player player) {
             this.replayRecordMode = false;
@@ -25,6 +27,14 @@ public class PlayerObject {
             this.index = 0;
             this.fw = fw;
             this.player = player;
+      }
+
+      public NPC getNpc() {
+            return npc;
+      }
+
+      public void setNpc(NPC npc) {
+            this.npc = npc;
       }
 
       public boolean isReplayRecordMode() {

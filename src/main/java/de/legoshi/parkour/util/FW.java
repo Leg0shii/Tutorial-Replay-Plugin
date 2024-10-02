@@ -44,6 +44,19 @@ public class FW {
 
       }
 
+      public FW setLocationAll(Location location, int num, String player) {
+
+            c.set(player + "." + num + ".world", location.getWorld().getName());
+            c.set(player + "." + num + ".x", location.getX());
+            c.set(player + "." + num + ".y", location.getY());
+            c.set(player + "." + num + ".z", location.getZ());
+            c.set(player + "." + num + ".yaw", location.getYaw());
+            c.set(player + "." + num + ".pitch", location.getPitch());
+
+            return this;
+
+      }
+
       public Location getLocation(int pos) {
 
             World world = Bukkit.getWorld(c.getString(pos + ".world"));
@@ -54,7 +67,20 @@ public class FW {
             float pitch = (float) c.getDouble(pos + ".pitch");
 
             Location location = new Location(world, x, y, z, yaw, pitch);
+            return location;
 
+      }
+
+      public Location getLocationAll(int pos, String player) {
+
+            World world = Bukkit.getWorld(c.getString(player + "." + pos + ".world"));
+            double x = c.getDouble(player + "." + pos + ".x");
+            double y = c.getDouble(player + "." + pos + ".y");
+            double z = c.getDouble(player + "." + pos + ".z");
+            float yaw = (float) c.getDouble(player + "." + pos + ".yaw");
+            float pitch = (float) c.getDouble(player + "." + pos + ".pitch");
+
+            Location location = new Location(world, x, y, z, yaw, pitch);
             return location;
 
       }
